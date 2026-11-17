@@ -1,0 +1,126 @@
+---
+// The one bold thing: a blind taste test. Pick a cup, then a blue pencil circle
+// draws around the sample made with the skill.
+import { rounds } from '../data/rounds';
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const data = rounds.map((r) => ({
+  ...r,
+  with: { ...r.with, img: base + r.with.img },
+  without: { ...r.without, img: base + r.without.img },
+}));
+---
+<div class="counter" id="counter" data-rounds={JSON.stringify(data)}>
+  <div class="rounds" role="group" aria-label="Choose a tasting round">
+    {rounds.map((r, i) => (
+      <button class="round" type="button" data-round={r.id} aria-pressed={i === 0 ? 'true' : 'false'}>{r.label}</button>
+    ))}
+  </div>
+  <p class="brief" id="brief"></p>
+  <div class="cups" id="cups"></div>
+  <p class="verdict" id="verdict" aria-live="polite"></p>
+  <button class="again" id="again" type="button"></button>
+  <noscript><p class="brief">The taste test needs JavaScript. The samples are in the repo under site/public/img.</p></noscript>
+</div>
+
+<script>
+  type Sample = { img: string; alt: string; note: string };
+  type Round = { id: string; label: string; next: string; prompt: string; with: Sample; without: Sample };
+
+  const counter = document.getElementById('counter')!;
+  const rounds: Round[] = JSON.parse(counter.dataset.rounds || '[]');
+  const cupsEl = document.getElementById('cups')!;
+  const briefEl = document.getElementById('brief')!;
+  const verdictEl = document.getElementById('verdict')!;
+  const againEl = document.getElementById('again')!;
+  let current = rounds[0];
+
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+
+  function render(id: string) {
+    current = rounds.find((r) => r.id === id) || rounds[0];
+    briefEl.innerHTML = '<b>The prompt:</b> "' + esc(current.prompt) + '"';
+    const order = Math.random() < 0.5 ? (['with', 'without'] as const) : (['without', 'with'] as const);
+    cupsEl.className = 'cups';
+    verdictEl.textContent = '';
+    againEl.classList.remove('on');
+    cupsEl.innerHTML = order
+      .map((kind, i) => {
+        const s = current[kind];
+        const letter = i === 0 ? 'A' : 'B';
+        return (
+          '<figure class="cup" data-kind="' + kind + '">' +
+          '<div class="frame"><span class="tag" aria-hidden="true">' + letter + '</span>' +
+          '<img src="' + s.img + '" alt="Cup ' + letter + ': ' + esc(s.alt) + '" width="1440" height="900" loading="lazy">' +
+          '<svg class="ring" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="50" cy="50" rx="48.5" ry="47" vector-effect="non-scaling-stroke"/></svg></div>' +
+          '<button class="pick" type="button" data-kind="' + kind + '">Cup ' + letter + ' has taste</button>' +
+          '<figcaption class="note">' + s.note + '</figcaption></figure>'
+        );
+      })
+      .join('');
+    document.querySelectorAll<HTMLButtonElement>('.round').forEach((b) => {
+      b.setAttribute('aria-pressed', b.dataset.round === current.id ? 'true' : 'false');
+    });
+  }
+
+  cupsEl.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.pick');
+    if (!btn) return;
+    cupsEl.classList.add('revealed');
+    cupsEl.querySelector('.cup[data-kind="with"]')!.classList.add('taste');
+    verdictEl.textContent =
+      btn.dataset.kind === 'with'
+        ? 'You picked the one made with the skill.'
+        : 'You picked the one made without it. Fair: both are competent. Read the notes to see what the skill caught.';
+    againEl.textContent = current.next;
+    againEl.classList.add('on');
+  });
+
+  againEl.addEventListener('click', () => {
+    const other = rounds.find((r) => r.id !== current.id) || rounds[0];
+    render(other.id);
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    counter.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('.round').forEach((b) => {
+    b.addEventListener('click', () => render(b.dataset.round || ''));
+  });
+
+  render(rounds[0].id);
+</script>
+
+<style is:global>
+  .counter { margin: 32px 0 0; padding: 28px 0 8px; border-top: 2px solid var(--ink); }
+  .rounds { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .round { font: 700 16px/1 var(--body); padding: 11px 16px; border: 2px solid var(--ink); background: transparent; color: var(--ink); border-radius: 999px; cursor: pointer; }
+  .round[aria-pressed="true"] { background: var(--ink); color: var(--porcelain); }
+  .brief { color: var(--muted); margin: 0 0 22px; font-size: 16px; }
+  .brief b { color: var(--ink); }
+  .cups { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .cup { position: relative; margin: 0; }
+  .frame { position: relative; background: var(--porcelain); padding: 10px; border-radius: 3px; box-shadow: 0 1px 0 var(--line), 0 18px 30px -24px rgba(34, 38, 42, .45); }
+  .frame img { display: block; width: 100%; height: auto; aspect-ratio: 1440/900; object-fit: cover; object-position: top; }
+  .tag { position: absolute; top: -16px; left: -12px; width: 46px; height: 46px; border-radius: 50%; background: var(--liquor); color: var(--porcelain); font: 800 22px/46px var(--display); text-align: center; box-shadow: 0 0 0 4px var(--tile); }
+  .ring { position: absolute; top: -16px; left: -14px; width: calc(100% + 28px); height: calc(100% + 32px); pointer-events: none; overflow: visible; }
+  .ring ellipse { fill: none; stroke: var(--pencil); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 2400; stroke-dashoffset: 2400; }
+  .cup.taste .ring ellipse { animation: draw 900ms ease-out forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  .pick { margin-top: 14px; font: 700 17px/1 var(--body); padding: 14px 18px; border-radius: 6px; border: 2px solid var(--pencil); background: var(--porcelain); color: var(--pencil); cursor: pointer; width: 100%; }
+  .pick:hover { background: var(--pencil); color: var(--porcelain); }
+  .note { display: none; margin: 14px 0 0; font: 500 18px/1.45 var(--display); color: var(--pencil); }
+  .note strong { font-weight: 800; }
+  .revealed .note { display: block; }
+  .revealed .pick { display: none; }
+  .verdict { min-height: 1.6em; margin: 22px 0 0; font: 800 clamp(22px, 2.4vw, 30px)/1.2 var(--display); letter-spacing: -.01em; }
+  .again { display: none; margin-top: 10px; font: 700 16px/1 var(--body); background: none; border: 0; color: var(--pencil); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 6px 0; }
+  .again.on { display: inline-block; }
+  @media (max-width: 820px) {
+    .cups { grid-template-columns: 1fr; gap: 40px; }
+    .tag { left: -6px; }
+    .ring { top: -10px; left: -8px; width: calc(100% + 16px); height: calc(100% + 20px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cup.taste .ring ellipse { animation: none; stroke-dashoffset: 0; }
+  }
+</style>

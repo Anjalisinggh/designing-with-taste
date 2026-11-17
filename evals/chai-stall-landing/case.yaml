@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: chai-stall-landing
+expected_outcome: |
+  A single HTML landing page with a clear point of view drawn from a Pune chai tapri, real menu and hours, no invented stats or testimonials, no first or second order slop defaults, works at phone width.

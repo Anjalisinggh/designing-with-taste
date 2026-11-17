@@ -1,0 +1,17 @@
+# designing-with-taste
+
+> An open-source agent skill for AI coding agents that stops generic "AI slop" UI. It pushes landing pages, apps, dashboards and game menus toward design grounded in the real subject, and can review an existing site and say whether it looks AI-made.
+
+- Source and install: https://github.com/Anjalisinggh/designing-with-taste
+- Install: clone the repo into your agent's skills folder; the agent picks it up automatically.
+
+## What it does
+
+- Build mode: sets boldness, motion and density dials, grounds the design in the subject, checks the plan against known AI defaults, builds, screenshots at desktop, laptop and phone sizes, runs a scanner and fixes what fails.
+- Review mode: screenshots a live site, reads its CSS and copy, and gives a verdict (Slop, Partly generic, Not slop) with evidence and fixes.
+- Knows first-order slop (purple gradients, Inter, identical rounded cards, three-icon feature grids, buzzword copy) and second-order slop (cream + serif + terracotta, near-black + acid accent, all-caps eyebrows, mono micro-labels).
+- Includes scripts/slop_scan.py, a Python standard-library scanner for overused fonts, gradients, buzzwords, em dashes and accessibility basics.
+
+## Results
+
+In blind evals, builds made with the skill passed 93% of checks versus 79% without it. The main gain is avoiding second-order slop and invented facts.

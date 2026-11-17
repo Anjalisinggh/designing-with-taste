@@ -1,0 +1,25 @@
+/* Point of view: a blind tea-tasting counter. Cups in a row, graded without knowing which is which.
+   Full plan in DESIGN.md. */
+:root {
+  --tile: #EDF1EF;      /* tasting-room wall tile, cool, not cream */
+  --porcelain: #FFFFFF; /* cups and sample frames */
+  --ink: #22262A;       /* text */
+  --muted: #56616B;     /* secondary text */
+  --pencil: #2350B8;    /* the broker's blue grading pencil: actions and marks */
+  --liquor: #C68A12;    /* golden tea liquor: cup number discs only */
+  --line: #C9D1CD;
+  --display: 'Bricolage Grotesque', 'Arial Narrow', sans-serif;
+  --body: 'Atkinson Hyperlegible', Verdana, sans-serif;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--tile); color: var(--ink); font: 400 18px/1.6 var(--body); }
+a { color: var(--pencil); text-underline-offset: 3px; }
+:focus-visible { outline: 3px solid var(--pencil); outline-offset: 3px; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+p { max-width: 66ch; }
+h2 { font: 800 clamp(30px, 3.6vw, 46px)/1.05 var(--display); letter-spacing: -.02em; margin: 0 0 14px; }
+section { padding: 72px 0 0; }
+@media (max-width: 820px) {
+  body { font-size: 17px; }
+}

@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import TasteTest from '../components/TasteTest.astro';
+import Score from '../components/Score.astro';
+import Palate from '../components/Palate.astro';
+import Method from '../components/Method.astro';
+import Scanner from '../components/Scanner.astro';
+import Install from '../components/Install.astro';
+---
+<Base
+  title="designing-with-taste: an agent skill that stops AI slop UI"
+  description="An agent skill that keeps AI-built interfaces from looking like every other AI-built interface. Take the blind taste test."
+>
+  <Hero />
+  <main>
+    <TasteTest />
+    <Score />
+    <Palate />
+    <Method />
+    <Scanner />
+    <Install />
+  </main>
+  <footer>
+    <p>Made by <a href="https://github.com/Anjalisinggh">Anjali Singh</a>.</p>
+  </footer>
+</Base>
+
+<style>
+  footer { padding: 40px 0 56px; color: var(--muted); font-size: 15px; border-top: 1px solid var(--line); }
+  footer p { margin: 6px 0; }
+</style>

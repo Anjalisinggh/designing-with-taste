@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: gym-admin-dashboard
+expected_outcome: |
+  A calm, dense, usable front-desk dashboard (not a flashy marketing page) with the three requested views, sample data clearly marked as sample, accessible controls, and still some character from the subject.

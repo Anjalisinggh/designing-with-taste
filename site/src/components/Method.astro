@@ -1,0 +1,36 @@
+---
+const steps = [
+  ['Ground it in the subject', 'A chai stall has a painted signboard. A gym has weight plates. The look starts there, not in a template.'],
+  ['Write a short plan', 'Point of view, four to six named colours, type with clear jobs, a rough wireframe, one bold thing.'],
+  ['Check the plan against the defaults', 'Anything the agent would have made for any similar prompt gets changed, with a reason.'],
+  ['Build', 'Real content only, one main action per screen, accessible by default.'],
+  ['Look at it', 'Screenshots at desktop, laptop and phone size, plus a scanner pass over the code.'],
+  ['Fix, then remove one thing', 'Take one decoration off before shipping.'],
+];
+---
+<section aria-labelledby="how">
+  <h2 id="how">How it works</h2>
+  <ol class="steps">
+    {steps.map(([title, body], i) => (
+      <li>
+        <span class="n">{String(i + 1).padStart(2, '0')}</span>
+        <b>{title}</b>
+        <span class="body">{body}</span>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  .steps { margin: 28px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 40px; }
+  .steps li { display: grid; grid-template-rows: auto auto 1fr; align-content: start; padding: 20px 0 32px; border-top: 2px solid var(--ink); }
+  .n { font: 800 56px/1 var(--display); color: var(--pencil); letter-spacing: -0.02em; margin-bottom: 18px; }
+  .steps b { font: 700 19px/1.3 var(--body); margin-bottom: 6px; }
+  .body { color: var(--muted); font-size: 16px; max-width: 34ch; }
+  @media (max-width: 980px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) {
+    .steps { grid-template-columns: 1fr; }
+    .steps li { grid-template-columns: 56px 1fr; grid-template-rows: auto 1fr; column-gap: 12px; padding: 18px 0 22px; }
+    .n { grid-row: span 2; font-size: 36px; margin: 0; }
+  }
+</style>

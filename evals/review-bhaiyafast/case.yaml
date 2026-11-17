@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: review-bhaiyafast
+expected_outcome: |
+  An honest review based on actually looking at the live site (screenshots) and the source, with a clear verdict, evidence-backed strengths, concrete generic-looking issues, and fixes that grow from the existing rickshaw theme.

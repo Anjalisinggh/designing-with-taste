@@ -1,0 +1,37 @@
+---
+const cmd = 'git clone https://github.com/Anjalisinggh/designing-with-taste.git';
+---
+<div class="install" id="install">
+  <h2>Install</h2>
+  <p>Clone it into your agent's skills folder. It loads itself when you ask for a page, a dashboard or a game menu, or when you ask whether something looks AI-made.</p>
+  <div class="cmd">
+    <code id="cmd">{cmd}</code>
+    <button class="copy" id="copy" type="button">Copy command</button>
+  </div>
+</div>
+
+<script>
+  const btn = document.getElementById('copy')!;
+  btn.addEventListener('click', () => {
+    const text = document.getElementById('cmd')!.textContent || '';
+    const done = (ok: boolean) => {
+      btn.textContent = ok ? 'Copied' : 'Select and copy';
+      setTimeout(() => (btn.textContent = 'Copy command'), 1800);
+    };
+    if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => done(true), () => done(false));
+    else done(false);
+  });
+</script>
+
+<style>
+  .install { margin: 88px 0 0; padding: 48px 0; border-top: 2px solid var(--ink); }
+  .cmd { display: flex; align-items: stretch; margin-top: 20px; max-width: 880px; }
+  code { flex: 1; min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; background: var(--porcelain); border: 2px solid var(--ink); border-right: 0; border-radius: 6px 0 0 6px; padding: 16px 18px; font: 400 15px/1.5 ui-monospace, Menlo, Consolas, monospace; }
+  .copy { flex: none; font: 700 17px/1 var(--body); padding: 0 24px; border: 2px solid var(--pencil); background: var(--pencil); color: var(--porcelain); border-radius: 0 6px 6px 0; cursor: pointer; }
+  p { margin-top: 16px; color: var(--muted); }
+  @media (max-width: 820px) {
+    .cmd { flex-direction: column; }
+    code { border-right: 2px solid var(--ink); border-bottom: 0; border-radius: 6px 6px 0 0; font-size: 14px; padding: 14px 16px; }
+    .copy { padding: 16px; border-radius: 0 0 6px 6px; }
+  }
+</style>
